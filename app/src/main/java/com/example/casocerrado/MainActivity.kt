@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.casocerrado.ui.screens.HomeScreen
+import com.example.casocerrado.navigation.AppNavigation
 import com.example.casocerrado.ui.theme.CasoCerradoTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,20 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CasoCerradoTheme {
-                HomeScreen(
-                    onNavigateToList = {
-                        // ListCasesScreen
-                    },
-                    onNavigateToCreate = {
-                        // CreateCaseScreen
-                    },
-                    onNavigateToStats = {
-                        // estadisticas
-                    },
-                    onNavigateToClosedCases = {
-                        // listado
-                    }
-                )
+                AppNavigation()
             }
         }
     }
