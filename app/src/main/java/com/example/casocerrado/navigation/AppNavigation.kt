@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.casocerrado.ui.screens.HomeScreen
+import com.example.casocerrado.ui.screens.ListCasesScreen
 
 @Composable
 fun AppNavigation() {
@@ -15,26 +16,36 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "home") {
 
-        composable("home") {
+        composable(route = "home") {
             HomeScreen(
-                onNavigateToList = { navController.navigate("list") },
-                onNavigateToCreate = { navController.navigate("create") },
+                onNavigateToList = { navController.navigate(route = "list") },
+                onNavigateToCreate = { navController.navigate(route = "create") },
                 onNavigateToStats = { /* no statistics screen yet */ },
-                onNavigateToClosedCases = { navController.navigate("list") }
+                onNavigateToClosedCases = { navController.navigate(route = "list") }
             )
         }
-        composable("list") { Text("Case list") }
+        composable(route = "list") {
+            ListCasesScreen(
+                onCaseClick = { case ->
+                    navController.navigate(route = "detail/${case.id}")
+                },
+                onNavigateToCreate = {
+                    navController.navigate(route = "create")
+                }
+            )
+        }
 
-        composable("create") { Text("Create case") }
+        // estas siguen con el texto de relleno pq esas pantallas todavia no existen
+        composable(route = "create") { Text("Create case") }
 
         composable(
             route = "detail/{caseId}",
-            arguments = listOf(navArgument("caseId") { type = NavType.IntType })
+            arguments = listOf(navArgument(name = "caseId") { type = NavType.IntType })
         ) { Text("Case detail") }
 
         composable(
             route = "edit/{caseId}",
-            arguments = listOf(navArgument("caseId") { type = NavType.IntType })
+            arguments = listOf(navArgument(name = "caseId") { type = NavType.IntType })
         ) { Text("Edit case") }
     }
 }

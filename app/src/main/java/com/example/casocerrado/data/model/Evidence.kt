@@ -9,6 +9,6 @@ data class Evidence(
     val description: String,
     val date: LocalDate = LocalDate.now()
 ) {
-    /** Business rule: evidence must have a description. */
+
     fun isValid(): Boolean = description.isNotBlank()
 }
