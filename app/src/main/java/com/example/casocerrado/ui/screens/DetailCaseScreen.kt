@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.casocerrado.data.model.Case
 import com.example.casocerrado.data.model.EstateCase
+import com.example.casocerrado.ui.components.DeleteButton
 
 @Composable
 fun DetailCaseScreen(
@@ -37,7 +38,8 @@ fun DetailCaseScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onCloseCase: () -> String,
-    onReopenCase: () -> String
+    onReopenCase: () -> String,
+    onDeleteCase: () -> String
 ) {
 
     var errorMessage by remember { mutableStateOf("") }
@@ -155,6 +157,17 @@ fun DetailCaseScreen(
                     Text("Close case")
                 }
             }
+            DeleteButton(
+                text = "Delete case",
+                onClick = {
+                    val result = onDeleteCase()
+                    if (result != "") {
+                        errorMessage = result
+                    } else {
+                        onBack()
+                    }
+                }
+            )
 
             Button(
                 onClick = onBack,
