@@ -1,6 +1,7 @@
 package com.example.casocerrado.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.casocerrado.data.model.Case
 import com.example.casocerrado.data.model.EstateCase
+import com.example.casocerrado.data.model.Evidence
+import com.example.casocerrado.data.model.TypeEvidence
 import com.example.casocerrado.ui.components.DeleteButton
 
 @Composable
@@ -39,10 +43,16 @@ fun DetailCaseScreen(
     onEdit: () -> Unit,
     onCloseCase: () -> String,
     onReopenCase: () -> String,
-    onDeleteCase: () -> String
+    onDeleteCase: () -> String,
+    onAddEvidence: (type: TypeEvidence, description: String) -> String
 ) {
 
     var errorMessage by remember { mutableStateOf("") }
+
+    var selectedType by remember { mutableStateOf(TypeEvidence.PHOTO) }
+    var evidenceDescription by remember { mutableStateOf("") }
+    var evidenceMessage by remember { mutableStateOf("") }
+    var evidenceMessageIsError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -107,8 +117,104 @@ fun DetailCaseScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(text = "Add evidence", fontWeight = FontWeight.Bold)
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    for (tipo in TypeEvidence.entries) {
+                        val estaSeleccionado = tipo == selectedType
+
+                        Text(
+                            text = tipo.label,
+                            fontSize = 12.sp,
+                            color = if (estaSeleccionado) Color.White else Color.DarkGray,
+                            modifier = Modifier
+                                .background(
+                                    if (estaSeleccionado) Color(0xFF1B2A4A) else Color(0xFFE0E0E0),
+                                    RoundedCornerShape(20.dp)
+                                )
+                                .clickable { selectedType = tipo }
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = evidenceDescription,
+                    onValueChange = { evidenceDescription = it },
+                    label = { Text("Evidence description") },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+                if (evidenceMessage != "") {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = evidenceMessage,
+                        color = if (evidenceMessageIsError) Color.Red else Color(0xFF2E7D32),
+                        fontSize = 12.sp
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Button(
+                    onClick = {
+                        val result = onAddEvidence(selectedType, evidenceDescription)
+
+                        if (result == "") {
+                            evidenceDescription = ""
+                            evidenceMessage = "Evidence added successfully"
+                            evidenceMessageIsError = false
+                        } else {
+                            evidenceMessage = result
+                            evidenceMessageIsError = true
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Add evidence")
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(text = "Recorded evidence", fontWeight = FontWeight.Bold)
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (case.evidence.isEmpty()) {
+                    Text(text = "No evidence added yet", color = Color.Gray, fontSize = 13.sp)
+                } else {
+                    for (item in case.evidence) {
+                        EvidenceRow(evidence = item)
+                        Spacer(modifier = Modifier.height(6.dp))
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         if (errorMessage != "") {
             Text(
@@ -178,4 +284,13 @@ fun DetailCaseScreen(
             }
         }
     }
+}
+
+@Composable
+fun EvidenceRow(evidence: Evidence) {
+    Text(
+        text = "${evidence.type.label}: ${evidence.description}",
+        fontSize = 13.sp,
+        color = Color.DarkGray
+    )
 }

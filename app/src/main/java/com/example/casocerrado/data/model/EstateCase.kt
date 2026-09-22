@@ -8,7 +8,6 @@ enum class EstateCase(val label: String) {
         get() = this == CLOSED
 
     companion object {
-        /** Rebuilds the status from the stored value (text in SQLite / SharedPreferences). */
         fun fromName(name: String): EstateCase =
             entries.firstOrNull { it.name == name } ?: IN_INVESTIGATION
     }

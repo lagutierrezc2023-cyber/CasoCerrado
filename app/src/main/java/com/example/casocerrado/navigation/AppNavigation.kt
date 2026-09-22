@@ -70,18 +70,15 @@ fun AppNavigation() {
             )
         }
 
-
         composable(
             route = "detail/{caseId}",
             arguments = listOf(navArgument(name = "caseId") { type = NavType.IntType })
         ) { backStackEntry ->
 
-
             val caseId = backStackEntry.arguments?.getInt("caseId") ?: 0
             val selectedCase = casesList.find { it.id == caseId }
 
             if (selectedCase == null) {
-
                 Text("Case not found")
             } else {
                 DetailCaseScreen(
@@ -101,6 +98,20 @@ fun AppNavigation() {
                     },
                     onReopenCase = {
                         val result = casesManagement.reopenCase(selectedCase.id)
+                        if (result == "") {
+                            refreshCases()
+                        }
+                        result
+                    },
+                    onDeleteCase = {
+                        val result = casesManagement.deleteCase(selectedCase.id)
+                        if (result == "") {
+                            refreshCases()
+                        }
+                        result
+                    },
+                    onAddEvidence = { type, description ->
+                        val result = casesManagement.addEvidence(selectedCase.id, type, description)
                         if (result == "") {
                             refreshCases()
                         }
