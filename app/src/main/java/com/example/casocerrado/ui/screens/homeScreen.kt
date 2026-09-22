@@ -99,9 +99,12 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                // cambie el nombre de esta tarjeta de "Statistics" a "Edit Cases"
+                // el parametro sigue llamandose onNavigateToStats por ahora,
+                // no le cambie el nombre pa no romper lo que ya esta conectado en AppNavigation
                 MenuCard(
-                    title = "Statistics",
-                    subtitle = "Your activity in numbers",
+                    title = "Edit Cases",
+                    subtitle = "Update case information",
                     modifier = Modifier.weight(1f),
                     onClick = onNavigateToStats
                 )

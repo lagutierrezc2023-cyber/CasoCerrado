@@ -14,6 +14,9 @@ import androidx.navigation.navArgument
 import com.example.casocerrado.data.model.Case
 import com.example.casocerrado.data.repository.CasesManaging
 import com.example.casocerrado.domain.CasesManagement
+import com.example.casocerrado.ui.screens.CreateCaseScreen
+import com.example.casocerrado.ui.screens.DetailCaseScreen
+import com.example.casocerrado.ui.screens.EditCaseScreen
 import com.example.casocerrado.ui.screens.HomeScreen
 import com.example.casocerrado.ui.screens.ListCasesScreen
 
@@ -34,10 +37,11 @@ fun AppNavigation() {
             HomeScreen(
                 onNavigateToList = { navController.navigate(route = "list") },
                 onNavigateToCreate = { navController.navigate(route = "create") },
-                onNavigateToStats = { /* no statistics screen yet */ },
+                onNavigateToStats = { navController.navigate(route = "list") },
                 onNavigateToClosedCases = { navController.navigate(route = "list") }
             )
         }
+
         composable(route = "list") {
             refreshCases()
 
@@ -51,16 +55,73 @@ fun AppNavigation() {
                 }
             )
         }
-        composable(route = "create") { Text("Create case") }
 
+        composable(route = "create") {
+            CreateCaseScreen(
+                onSave = { title, description, date ->
+                    val result = casesManagement.createCase(title, description, date)
+                    if (result == "") {
+                        refreshCases()
+                    }
+                    result
+                },
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // aca ya conecto DetailCaseScreen de verdad
         composable(
             route = "detail/{caseId}",
             arguments = listOf(navArgument(name = "caseId") { type = NavType.IntType })
-        ) { Text("Case detail") }
+        ) { backStackEntry ->
+
+            // saco el id de la ruta y busco el caso completo en la lista cargada
+            val caseId = backStackEntry.arguments?.getInt("caseId") ?: 0
+            val selectedCase = casesList.find { it.id == caseId }
+
+            if (selectedCase == null) {
+                // no deberia pasar nunca en uso normal, pero evita un crash
+                Text("Case not found")
+            } else {
+                DetailCaseScreen(
+                    case = selectedCase,
+                    onBack = {
+                        navController.popBackStack()
+                    },
+                    onEdit = {
+                        navController.navigate(route = "edit/${selectedCase.id}")
+                    }
+                )
+            }
+        }
 
         composable(
             route = "edit/{caseId}",
             arguments = listOf(navArgument(name = "caseId") { type = NavType.IntType })
-        ) { Text("Edit case") }
+        ) { backStackEntry ->
+
+            val caseId = backStackEntry.arguments?.getInt("caseId") ?: 0
+            val selectedCase = casesList.find { it.id == caseId }
+
+            if (selectedCase == null) {
+                Text("Case not found")
+            } else {
+                EditCaseScreen(
+                    case = selectedCase,
+                    onSave = { id, title, description, date ->
+                        val result = casesManagement.editCase(id, title, description, date)
+                        if (result == "") {
+                            refreshCases()
+                        }
+                        result
+                    },
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
     }
 }
