@@ -11,14 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.casocerrado.data.model.Case
 import com.example.casocerrado.data.model.EstateCase
+import com.example.casocerrado.ui.components.CasoCard
 import com.example.casocerrado.ui.components.SearchBar
+import com.example.casocerrado.ui.components.SmallActionButton
 import com.example.casocerrado.ui.components.filterCases
 
 
@@ -73,12 +70,10 @@ fun ListCasesScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            Button(
-                onClick = onNavigateToCreate,
-                shape = RoundedCornerShape(20.dp)
-            ) {
-                Text("+ New case")
-            }
+            SmallActionButton(
+                text = "+ New case",
+                onClick = onNavigateToCreate
+            )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -117,8 +112,8 @@ fun ListCasesScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(filteredCases) { case ->
-                CaseListItem(
-                    case = case,
+                CasoCard(
+                    caso = case,
                     onClick = { onCaseClick(case) }
                 )
             }
@@ -150,59 +145,8 @@ fun TabText(text: String, selected: Boolean, onClick: () -> Unit) {
     }
 }
 
-@Composable
-fun CaseListItem(case: Case, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(14.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Box(
-                modifier = Modifier
-                    .size(54.dp)
-                    .background(Color(0xFF3A3A3C), RoundedCornerShape(12.dp))
-            )
-
-            Spacer(modifier = Modifier.width(14.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = case.title, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(text = "Case #${case.id}", fontSize = 12.sp, color = Color.Gray)
-                Text(text = case.fecha, fontSize = 12.sp, color = Color.Gray)
-            }
-
-            Column(horizontalAlignment = Alignment.End) {
-                val badgeColor = if (case.state == EstateCase.CLOSED) {
-                    Color(0xFFB2F2BB)
-                } else {
-                    Color(0xFFFFE066)
-                }
-
-                Box(
-                    modifier = Modifier
-                        .background(badgeColor, RoundedCornerShape(20.dp))
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                ) {
-                    Text(text = case.state.label, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(text = ">", color = Color.Gray, fontWeight = FontWeight.Bold)
-            }
-        }
-    }
-}
-
+// la tarjeta de cada caso ahora vive en ui/components/CasoCard.kt
+// para no repetir el mismo codigo aca
 
 fun mockCases(): List<Case> {
     return listOf(

@@ -6,5 +6,16 @@ enum class TypeEvidence(val label: String) {
     DOCUMENT("Document"),
     TESTIMONY("Testimony"),
     OBJECT("Object"),
-    OTHER("Other")
+    OTHER("Other");
+
+    companion object {
+        fun fromName(name: String): TypeEvidence {
+            for (tipo in entries) {
+                if (tipo.name == name) {
+                    return tipo
+                }
+            }
+            return OTHER
+        }
+    }
 }
