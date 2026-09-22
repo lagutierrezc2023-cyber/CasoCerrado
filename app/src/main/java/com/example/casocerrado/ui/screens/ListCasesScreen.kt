@@ -134,8 +134,7 @@ fun TabText(text: String, selected: Boolean, onClick: () -> Unit) {
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
         )
         Spacer(modifier = Modifier.height(4.dp))
-        // la rayita solo se dibuja si esta seleccionada, si no dejo un espacio vacio
-        // del mismo alto pa que las demas pestañas no salten de posicion
+
         Box(
             modifier = Modifier
                 .height(2.dp)
@@ -145,8 +144,7 @@ fun TabText(text: String, selected: Boolean, onClick: () -> Unit) {
     }
 }
 
-// la tarjeta de cada caso ahora vive en ui/components/CasoCard.kt
-// para no repetir el mismo codigo aca
+
 
 fun mockCases(): List<Case> {
     return listOf(

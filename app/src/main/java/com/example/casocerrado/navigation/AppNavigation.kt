@@ -37,8 +37,7 @@ fun AppNavigation() {
             HomeScreen(
                 onNavigateToList = { navController.navigate(route = "list") },
                 onNavigateToCreate = { navController.navigate(route = "create") },
-                onNavigateToStats = { navController.navigate(route = "list") },
-                onNavigateToClosedCases = { navController.navigate(route = "list") }
+                onNavigateToStats = { navController.navigate(route = "list") }
             )
         }
 
@@ -92,6 +91,20 @@ fun AppNavigation() {
                     },
                     onEdit = {
                         navController.navigate(route = "edit/${selectedCase.id}")
+                    },
+                    onCloseCase = {
+                        val result = casesManagement.closeCase(selectedCase.id)
+                        if (result == "") {
+                            refreshCases()
+                        }
+                        result
+                    },
+                    onReopenCase = {
+                        val result = casesManagement.reopenCase(selectedCase.id)
+                        if (result == "") {
+                            refreshCases()
+                        }
+                        result
                     }
                 )
             }

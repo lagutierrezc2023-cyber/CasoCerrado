@@ -14,9 +14,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,8 +35,13 @@ import com.example.casocerrado.data.model.EstateCase
 fun DetailCaseScreen(
     case: Case,
     onBack: () -> Unit,
-    onEdit: () -> Unit
+    onEdit: () -> Unit,
+    onCloseCase: () -> String,
+    onReopenCase: () -> String
 ) {
+
+    var errorMessage by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,10 +64,9 @@ fun DetailCaseScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val badgeColor = if (case.state == EstateCase.CLOSED) {
-                Color(0xFFB2F2BB)
-            } else {
-                Color(0xFFFFE066)
+            var badgeColor = Color(0xFFFFE066)
+            if (case.state == EstateCase.CLOSED) {
+                badgeColor = Color(0xFFB2F2BB)
             }
 
             Row(
@@ -95,7 +104,19 @@ fun DetailCaseScreen(
                 Text(text = "Evidence items recorded: ${case.evidence.size}")
             }
         }
-        Spacer(modifier = Modifier.height(24.dp))
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+
+        if (errorMessage != "") {
+            Text(
+                text = errorMessage,
+                color = Color.Red
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Button(
                 onClick = onEdit,
@@ -103,6 +124,36 @@ fun DetailCaseScreen(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text("Edit case")
+            }
+
+
+            if (case.state == EstateCase.CLOSED) {
+                Button(
+                    onClick = {
+                        val result = onReopenCase()
+                        if (result != "") {
+                            errorMessage = result
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Reopen case")
+                }
+            } else {
+                Button(
+                    onClick = {
+                        val result = onCloseCase()
+                        if (result != "") {
+                            errorMessage = result
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD64545))
+                ) {
+                    Text("Close case")
+                }
             }
 
             Button(

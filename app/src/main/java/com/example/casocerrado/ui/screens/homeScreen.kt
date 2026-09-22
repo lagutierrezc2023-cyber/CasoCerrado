@@ -32,8 +32,7 @@ fun HomeScreen(
     detectiveName: String = "Detective",
     onNavigateToList: () -> Unit,
     onNavigateToCreate: () -> Unit,
-    onNavigateToStats: () -> Unit,
-    onNavigateToClosedCases: () -> Unit
+    onNavigateToStats: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -95,24 +94,16 @@ fun HomeScreen(
             }
             Spacer(modifier = Modifier.height(12.dp))
 
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // cambie el nombre de esta tarjeta de "Statistics" a "Edit Cases"
-                // el parametro sigue llamandose onNavigateToStats por ahora,
-                // no le cambie el nombre pa no romper lo que ya esta conectado en AppNavigation
                 MenuCard(
                     title = "Edit Cases",
                     subtitle = "Update case information",
                     modifier = Modifier.weight(1f),
                     onClick = onNavigateToStats
-                )
-                MenuCard(
-                    title = "Closed cases",
-                    subtitle = "Review the finished cases",
-                    modifier = Modifier.weight(1f),
-                    onClick = onNavigateToClosedCases
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))

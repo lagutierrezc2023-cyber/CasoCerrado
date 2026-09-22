@@ -38,8 +38,7 @@ fun SearchBar(
     )
 }
 
-// Funcion para filtrar los casos en el buscador, recorre toda la lista y se queda solo con los casos
-// iguales a los del usuario
+
 fun filterCases(cases: List<Case>, query: String): List<Case> {
     if (query.isBlank()) {
         return cases
