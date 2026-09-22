@@ -71,18 +71,18 @@ fun AppNavigation() {
             )
         }
 
-        // aca ya conecto DetailCaseScreen de verdad
+
         composable(
             route = "detail/{caseId}",
             arguments = listOf(navArgument(name = "caseId") { type = NavType.IntType })
         ) { backStackEntry ->
 
-            // saco el id de la ruta y busco el caso completo en la lista cargada
+
             val caseId = backStackEntry.arguments?.getInt("caseId") ?: 0
             val selectedCase = casesList.find { it.id == caseId }
 
             if (selectedCase == null) {
-                // no deberia pasar nunca en uso normal, pero evita un crash
+
                 Text("Case not found")
             } else {
                 DetailCaseScreen(

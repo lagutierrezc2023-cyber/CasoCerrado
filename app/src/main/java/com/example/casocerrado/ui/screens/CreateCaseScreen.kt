@@ -23,22 +23,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// Pantalla para crear un caso nuevo.
-// onSave recibe titulo, descripcion y fecha, y devuelve un texto:
-//   "" si se guardo bien
-//   un mensaje si algo esta mal (por ejemplo un campo vacio)
-// onBack se usa para volver a la pantalla anterior
+
 @Composable
 fun CreateCaseScreen(
     onSave: (title: String, description: String, date: String) -> String,
     onBack: () -> Unit
 ) {
-    // variables para guardar lo que el usuario escribe en cada campo
+
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var date by remember { mutableStateOf("") }
 
-    // aca se guarda el mensaje de error para mostrarlo en pantalla
+
     var errorMessage by remember { mutableStateOf("") }
 
     Column(
@@ -92,7 +88,7 @@ fun CreateCaseScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // el mensaje de error solo se muestra si no esta vacio
+
         if (errorMessage != "") {
             Text(
                 text = errorMessage,
@@ -109,10 +105,10 @@ fun CreateCaseScreen(
                     val result = onSave(title, description, date)
 
                     if (result == "") {
-                        // se guardo bien, entonces volvemos atras
+
                         onBack()
                     } else {
-                        // algo salio mal, mostramos el mensaje
+
                         errorMessage = result
                     }
                 },
